@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinChatNet", "WinChatNet\WinChatNet.csproj", "{D9941B2F-999C-4230-86C9-81853CFDD312}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinChatNetTest", "WinChatNetTest\WinChatNetTest.csproj", "{195F4B05-3262-4547-9B7C-7021BE2267F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9941B2F-999C-4230-86C9-81853CFDD312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9941B2F-999C-4230-86C9-81853CFDD312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9941B2F-999C-4230-86C9-81853CFDD312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9941B2F-999C-4230-86C9-81853CFDD312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{195F4B05-3262-4547-9B7C-7021BE2267F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{195F4B05-3262-4547-9B7C-7021BE2267F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{195F4B05-3262-4547-9B7C-7021BE2267F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{195F4B05-3262-4547-9B7C-7021BE2267F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
