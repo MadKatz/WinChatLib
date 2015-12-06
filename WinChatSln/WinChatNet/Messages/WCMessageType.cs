@@ -14,5 +14,6 @@ namespace WinChatNet.Messages
         CONNECTDENY,
         MESSAGE,
         SERVER,
+        DISCONNECT
     }
 }

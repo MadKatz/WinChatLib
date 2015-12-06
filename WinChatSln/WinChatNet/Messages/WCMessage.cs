@@ -10,16 +10,18 @@ namespace WinChatNet.Messages
     public class WCMessage : IWCMessage
     {
         public string MessageID { get; private set; }
-        public string RepliedMessageID { get; set; }
+        public string Message { get; set; }
+        public WCMessageType MessageType { get; set; }
 
         public WCMessage()
         {
             MessageID = Guid.NewGuid().ToString();
         }
 
-        public WCMessage(string repliedmessageID) : this()
+        public WCMessage(string message, WCMessageType messageType) : this()
         {
-            RepliedMessageID = repliedmessageID;
+            Message = message;
+            MessageType = messageType;
         }
     }
 }

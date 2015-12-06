@@ -8,7 +8,8 @@ using WinChatNet.Channels;
 using WinChatNet.Messages;
 using WinChatNet.NetworkAdapter;
 using WinChatNet.NetworkAdapter.BinaryNetworkAdapter;
-using WinChatNet.Socket.Tcp;
+using System.Diagnostics;
+using System.Net;
 
 namespace WinChatNet.Channels.Tcp
 {
@@ -18,14 +19,21 @@ namespace WinChatNet.Channels.Tcp
         private byte[] buffer;
         private bool running;
         protected object communication_lock;
-        public TcpCommunicationChannel(TcpClient tcp_client)
+        protected IPAddress ip;
+        protected int port;
+        protected TcpClient client;
+
+        public TcpCommunicationChannel(TcpClient client, IPAddress ip, int port) : base()
         {
-            WCSocket = new TcpSocket(tcp_client);
+            this.client = client;
+            this.ip = ip;
+            this.port = port;
             buffer = new byte[ReceiveBufferSize];
             communication_lock = new Object();
             WireProtocol = new BinaryNetworkAdapter();
         }
-        public override void SendMessage(WCMessage message)
+
+        public override void SendMessage(IWCMessage message)
         {
             if (message == null)
             {
@@ -48,44 +56,47 @@ namespace WinChatNet.Channels.Tcp
                 {
                     while (total_sent < data.Length)
                     {
-                        int sent = ((TcpSocket)WCSocket).Tcp_client.Client.Send(data, total_sent, data.Length - total_sent, SocketFlags.None);
+                        int sent = client.Client.Send(data, total_sent, data.Length - total_sent, SocketFlags.None);
                         if (sent <= 0)
                         {
                             throw new Exception("Failed to send TCP message.");
                         }
                         total_sent += sent;
                         LastMessageSentDateStamp = DateTime.Now;
-                        OnMessageSent(message);
+                        SendMessageSentEvent(message);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    
-                    throw;
+                    Debug.WriteLine(ex.Message);
                 }
             }
         }
 
-        public override void Disconnect()
+        public override void Disconnect(Boolean triggerEvent)
         {
             if (CommunicationState == CommunicationState.Disconnected)
             {
                 return;
             }
             running = false;
-            if (((TcpSocket)WCSocket).Tcp_client.Connected)
+            if (client.Client.Connected)
             {
                 try
                 {
-                    ((TcpSocket)WCSocket).Tcp_client.Close();
+                    client.Client.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.Message);
                 }
-                ((TcpSocket)WCSocket).Tcp_client.Client.Dispose();
+                client.Client.Dispose();
             }
             CommunicationState = Channels.CommunicationState.Disconnected;
-            OnDisconnect();
+            if (triggerEvent)
+            {
+                SendDisconnectEvent();
+            }
         }
 
         protected override void StartCommunicationLoop()
@@ -93,24 +104,35 @@ namespace WinChatNet.Channels.Tcp
             running = true;
             try
             {
-                ((TcpSocket)WCSocket).Tcp_client.Client.BeginReceive(buffer, 0, ReceiveBufferSize, 0, new AsyncCallback(CallBack), null);
+                client.Client.BeginReceive(buffer, 0, ReceiveBufferSize, 0, new AsyncCallback(Send_CallBack), null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Disconnect();
+                Debug.WriteLine(ex.Message);
+                Disconnect(true);
             }
         }
 
-        protected void CallBack(IAsyncResult ar)
+        protected void Send_CallBack(IAsyncResult ar)
         {
             if (!running)
             {
                 return;
             }
-            var data_recieved = ((TcpSocket)WCSocket).Tcp_client.Client.EndReceive(ar);
+            int data_recieved = 0;
+            try
+            {
+                data_recieved = client.Client.EndReceive(ar);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Disconnect(true);
+            }
             if (data_recieved < 1)
             {
-                throw new Exception("failed to grab any messages. Socket closed?");
+                //throw new Exception("failed to grab any messages. Socket closed?");
+                return;
             }
             LastMessageRecievedDateStamp = DateTime.Now;
             var data = new byte[data_recieved];
@@ -118,11 +140,19 @@ namespace WinChatNet.Channels.Tcp
             var messages = WireProtocol.CreateMessages(data);
             foreach (var msg in messages)
             {
-                OnMessageRecieved(msg);
+                SendMessageRecievedEvent(msg);
             }
             if (running)
             {
-                ((TcpSocket)WCSocket).Tcp_client.Client.BeginReceive(buffer, 0, ReceiveBufferSize, 0, new AsyncCallback(CallBack), null);
+                try
+                {
+                    client.Client.BeginReceive(buffer, 0, ReceiveBufferSize, 0, new AsyncCallback(Send_CallBack), null);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    Disconnect(true);
+                }
             }
         }
     }

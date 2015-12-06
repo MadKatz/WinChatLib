@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D9941B2F-999C-4230-86C9-81853CFDD312}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{2F878339-D158-47CB-ABE7-8FC4D10E25CB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinChatNet</RootNamespace>
-    <AssemblyName>WinChatNet</AssemblyName>
+    <RootNamespace>WinChatServer</RootNamespace>
+    <AssemblyName>WinChatServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,33 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Channels\CommunicationChannelBase.cs" />
-    <Compile Include="Channels\CommunicationChannelEventArg.cs" />
-    <Compile Include="Channels\CommunicationState.cs" />
-    <Compile Include="Channels\ConnectionListenerBase.cs" />
-    <Compile Include="Channels\ICommunicationChannel.cs" />
-    <Compile Include="Channels\IConnectionListener.cs" />
-    <Compile Include="Channels\Tcp\TcpCommunicationChannel.cs" />
-    <Compile Include="Channels\Tcp\TcpConnectionListener.cs" />
-    <Compile Include="Client\IWCClient.cs" />
-    <Compile Include="Client\Tcp\WCTcpClient.cs" />
-    <Compile Include="Client\WCClientBase.cs" />
-    <Compile Include="Messages\IWCMessage.cs" />
-    <Compile Include="Messages\WCMessageEventArg.cs" />
-    <Compile Include="Messages\WCMessageType.cs" />
-    <Compile Include="Messenger\IMessenger.cs" />
-    <Compile Include="NetworkAdapter\BinaryNetworkAdapter\BinaryNetworkAdapter.cs" />
-    <Compile Include="NetworkAdapter\INetworkAdapter.cs" />
-    <Compile Include="NetworkAdapter\NetworkAdapterBase.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Messages\WCMessage.cs" />
-    <Compile Include="Server\IWCServer.cs" />
-    <Compile Include="Server\Tcp\WCTcpServer.cs" />
-    <Compile Include="Server\WCServerBase.cs" />
-    <Compile Include="Server\WCServerClient.cs" />
-    <Compile Include="Server\WCServerClientEventArgs.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WinChatNet\WinChatNet.csproj">
+      <Project>{d9941b2f-999c-4230-86c9-81853cfdd312}</Project>
+      <Name>WinChatNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

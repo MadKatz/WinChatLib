@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using WinChatNet.Channels;
-using WinChatNet.Socket.Tcp;
+using System.Diagnostics;
 
 namespace WinChatNet.Channels.Tcp
 {
@@ -15,12 +15,14 @@ namespace WinChatNet.Channels.Tcp
         protected bool _running;
         protected TcpListener listener;
         protected Task t;
-        public TcpSocket Socket { get; set; }
+        public int Port { get; set; }
+        public IPAddress IPToListenOn { get; set; }
 
-        public TcpConnectionListener(int port)
+        public TcpConnectionListener(IPAddress ip, int port) : base()
         {
             _running = false;
-            Socket.IPEndPoint.Port = port;
+            Port = port;
+            IPToListenOn = ip;
         }
 
         public override void Start()
@@ -40,26 +42,18 @@ namespace WinChatNet.Channels.Tcp
             {
                 StopSocket();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                Debug.WriteLine(ex.Message);
             }
         }
 
         protected void StartSocket()
         {
-            try
-            {
-                listener = new TcpListener(IPAddress.Any, Socket.IPEndPoint.Port);
-                listener.Start();
-                _running = true;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            listener = new TcpListener(IPToListenOn, Port);
+            listener.Start();
+            _running = true;
         }
 
         protected void StopSocket()
@@ -75,12 +69,12 @@ namespace WinChatNet.Channels.Tcp
                 try
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    OnConnected(new TcpCommunicationChannel(client));
+                    IPEndPoint ipep = (IPEndPoint)client.Client.RemoteEndPoint;
+                    SendConnectedEvent(new TcpCommunicationChannel(client, ipep.Address, Port));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    throw;
+                    Debug.WriteLine(ex.Message);
                 }
             }
         }

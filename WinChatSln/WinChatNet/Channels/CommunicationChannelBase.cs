@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using WinChatNet.Messages;
 using WinChatNet.NetworkAdapter;
-using WinChatNet.Socket;
 
 namespace WinChatNet.Channels
 {
@@ -20,7 +19,6 @@ namespace WinChatNet.Channels
         public DateTime LastMessageSentDateStamp { get; set; }
         public DateTime LastMessageRecievedDateStamp { get; set; }
         public INetworkAdapter WireProtocol { get; set; }
-        public IWCSocket WCSocket { get; set; }
 
         protected CommunicationChannelBase()
         {
@@ -28,9 +26,9 @@ namespace WinChatNet.Channels
             LastMessageSentDateStamp = DateTime.MinValue;
             LastMessageRecievedDateStamp = DateTime.MinValue;
         }
-        public abstract void SendMessage(WCMessage message);
+        public abstract void SendMessage(IWCMessage message);
 
-        public abstract void Disconnect();
+        public abstract void Disconnect(Boolean triggerEvent);
 
         public void Start()
         {
@@ -38,7 +36,7 @@ namespace WinChatNet.Channels
             CommunicationState = Channels.CommunicationState.Connected;
         }
 
-        protected void OnDisconnect()
+        protected void SendDisconnectEvent()
         {
             EventHandler handler = Disconnected;
             if (handler != null)
@@ -47,7 +45,7 @@ namespace WinChatNet.Channels
             }
         }
 
-        protected void OnMessageRecieved(IWCMessage message)
+        protected void SendMessageRecievedEvent(IWCMessage message)
         {
             EventHandler<WCMessageEventArg> handler = MessageRecieved;
             if (handler != null)
@@ -56,7 +54,7 @@ namespace WinChatNet.Channels
             }
         }
 
-        protected void OnMessageSent(IWCMessage message)
+        protected void SendMessageSentEvent(IWCMessage message)
         {
             EventHandler<WCMessageEventArg> handler = MessageSent;
             if (handler != null)

@@ -9,6 +9,7 @@ namespace WinChatNet.Messages
     public interface IWCMessage
     {
         string MessageID { get; }
-        string RepliedMessageID { get; set; }
+        string Message { get; set; }
+        WCMessageType MessageType { get; set; }
     }
 }

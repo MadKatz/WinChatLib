@@ -17,6 +17,6 @@ namespace WinChatNet.Messenger
         DateTime LastMessageRecievedDateStamp { get; set; }
         INetworkAdapter WireProtocol { get; set; }
 
-        void SendMessage(WCMessage message);
+        void SendMessage(IWCMessage message);
     }
 }

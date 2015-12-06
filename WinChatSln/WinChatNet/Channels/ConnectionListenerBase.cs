@@ -13,7 +13,7 @@ namespace WinChatNet.Channels
         public abstract void Start();
         public abstract void Stop();
 
-        protected virtual void OnConnected(ICommunicationChannel communicationChannel)
+        protected virtual void SendConnectedEvent(ICommunicationChannel communicationChannel)
         {
             EventHandler<CommunicationChannelEventArg> handler = CommunicationChannelConnected;
             if (handler != null)
