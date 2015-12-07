@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinChatNet.Messages;
-using WinChatNet.Messenger;
 
 namespace WinChatNet.Server
 {
@@ -12,6 +10,6 @@ namespace WinChatNet.Server
     {
         void Start();
         void Stop(String shutDownMessage);
-        void SendMessage(IWCMessage message);
+        void SendServerMessage(String text);
     }
 }

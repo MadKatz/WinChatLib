@@ -44,7 +44,6 @@ namespace WinChatNet.Channels.Tcp
             }
             catch (Exception ex)
             {
-
                 Debug.WriteLine(ex.Message);
             }
         }

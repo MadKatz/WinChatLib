@@ -76,16 +76,19 @@ namespace WinChatClient.Client.Tcp
             {
                 if (!client.Client.Connected)
                 {
-                    Disconnect("Lost connection to server");
+                    Disconnect("Lost connection to server.");
                 }
                 String input = null;
                 while (input == null && connected > 0)
                 {
-                    input = Console.ReadLine();
-                    if (input != null)
+                    if (Console.KeyAvailable)
                     {
-                        SendMessage(input);
-                        input = null;
+                        input = Console.ReadLine();
+                        if (input != null && connected > 0)
+                        {
+                            SendMessage(input);
+                            input = null;
+                        }
                     }
                 }
             }

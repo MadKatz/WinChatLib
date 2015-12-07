@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using WinChatNet.Channels;
 using WinChatNet.Channels.Tcp;
 using WinChatNet.Messages;
 
@@ -12,7 +13,7 @@ namespace WinChatNet.Client.Tcp
 {
     public class WCTcpClient : WCClientBase
     {
-        protected TcpCommunicationChannel CommunicationChannel;
+        protected ICommunicationChannel CommunicationChannel;
         public TcpClient Client { get; set; }
 
         public override void Connect(IPAddress ip, int port, String username)

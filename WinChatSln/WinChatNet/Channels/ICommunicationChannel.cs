@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinChatNet.Messenger;
-using System.Net.Sockets;
 
 namespace WinChatNet.Channels
 {

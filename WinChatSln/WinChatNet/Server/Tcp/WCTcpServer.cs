@@ -14,8 +14,8 @@ namespace WinChatNet.Server.Tcp
     public class WCTcpServer : WCServerBase
     {
         protected const String tempUsername = "anonymous123";
-        protected Dictionary<Guid, WCServerClient> clients;
-        protected Dictionary<Guid, WCServerClient> pendingClients;
+        protected Dictionary<Guid, IWCServerClient> clients;
+        protected Dictionary<Guid, IWCServerClient> pendingClients;
         protected IPAddress ip;
         protected int port;
 
@@ -28,20 +28,20 @@ namespace WinChatNet.Server.Tcp
 
         public override void Start()
         {
-            clients = new Dictionary<Guid, WCServerClient>();
-            pendingClients = new Dictionary<Guid, WCServerClient>();
+            clients = new Dictionary<Guid, IWCServerClient>();
+            pendingClients = new Dictionary<Guid, IWCServerClient>();
             listener = new TcpConnectionListener(ip, port);
             Running = true;
             listener.Start();
             listener.CommunicationChannelConnected += new EventHandler<CommunicationChannelEventArg>(Listener_OnConnectedEvent);
         }
 
-        public override void Stop(String shutDownMessage)
+        public override void Stop(String shutDownText)
         {
             listener.Stop();
             Running = false;
             String str = "***Server is shutting down. Reason ( ";
-            IWCMessage message = new WCMessage(str + shutDownMessage + " )", WCMessageType.DISCONNECT);
+            IWCMessage message = new WCMessage(str + shutDownText + " )", WCMessageType.DISCONNECT);
             foreach (var client in clients.Values)
             {
                 client.CommunicationChannel.SendMessage(message);
@@ -49,7 +49,17 @@ namespace WinChatNet.Server.Tcp
             }
         }
 
-        public override void SendMessage(IWCMessage message)
+        public override void SendServerMessage(String text)
+        {
+            if (Running)
+            {
+                String str = "***Server Message: ";
+                SendMessage(new WCMessage(str + text, WCMessageType.SERVER));
+            }
+
+        }
+
+        protected void SendMessage(IWCMessage message)
         {
             foreach (var client in clients.Values)
             {
@@ -76,7 +86,7 @@ namespace WinChatNet.Server.Tcp
 
         protected void Client_OnConnectedEvent(Object sender, WCServerClientEventArgs clientEventArgs)
         {
-            WCServerClient client = null;
+            IWCServerClient client = null;
             pendingClients.TryGetValue(clientEventArgs.ClientID, out client);
             if (client == null)
             {
@@ -93,7 +103,7 @@ namespace WinChatNet.Server.Tcp
 
         protected void Client_OnConnectionDenyEvent(Object sender, WCServerClientEventArgs clientEventArgs)
         {
-            WCServerClient client = null;
+            IWCServerClient client = null;
             pendingClients.TryGetValue(clientEventArgs.ClientID, out client);
             if (client == null)
             {

@@ -60,9 +60,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messages\WCMessage.cs" />
     <Compile Include="Server\IWCServer.cs" />
+    <Compile Include="Server\IWCServerClient.cs" />
     <Compile Include="Server\Tcp\WCTcpServer.cs" />
     <Compile Include="Server\WCServerBase.cs" />
     <Compile Include="Server\WCServerClient.cs" />
+    <Compile Include="Server\WCServerClientBase.cs" />
     <Compile Include="Server\WCServerClientEventArgs.cs" />
   </ItemGroup>
   <ItemGroup />

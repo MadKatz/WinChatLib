@@ -13,7 +13,7 @@ namespace WinChatClient
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Press 1 to connect to localhost server.");
+            Console.WriteLine("Press 1 to connect to remote server.");
             Console.WriteLine("Press 2 to exit.");
             String input = null;
             while (input == null)
@@ -22,7 +22,7 @@ namespace WinChatClient
                 if (input == "1")
                 {
                     Connect();
-                    Console.WriteLine("Press 1 to connect to localhost server.");
+                    Console.WriteLine("Press 1 to connect to remote server.");
                     Console.WriteLine("Press 2 to exit.");
                     input = null;
                 }
@@ -40,10 +40,14 @@ namespace WinChatClient
 
         private static void Connect()
         {
-            Console.WriteLine("Enter username: ");
+            Console.Write("Enter username: ");
             String username = Console.ReadLine();
+            Console.Write("Enter ip of server: ");
+            String ip = Console.ReadLine();
+            int port = 5005;
+            Console.WriteLine("Connecting to " + ip + ":" + port + " as " + username);
             WCTcpChatClient client = new WCTcpChatClient();
-            client.Connect(IPAddress.Parse("127.0.0.1"), 5005, username);
+            client.Connect(IPAddress.Parse(ip), port, username);
         }
     }
 }

@@ -24,13 +24,23 @@ namespace WinChatServer
                 }
                 else if (input.Equals("2"))
                 {
-                    KillServer();
+                    SendServerMessage();
                     input = null;
                 }
                 else if (input.Equals("3"))
                 {
                     KillServer();
+                    input = null;
+                }
+                else if (input.Equals("4"))
+                {
+                    KillServer();
                     System.Environment.Exit(0);
+                }
+                else
+                {
+                    Console.WriteLine(">Invalid input.\n");
+                    input = null;
                 }
             }
         }
@@ -38,8 +48,10 @@ namespace WinChatServer
         static String GetInput()
         {
             Console.WriteLine("1) Start server.");
-            Console.WriteLine("2) Kill Server.");
-            Console.WriteLine("3) Quit.");
+            Console.WriteLine("2) Send Server Message.");
+            Console.WriteLine("3) Kill Server.");
+            Console.WriteLine("4) Quit.");
+            Console.Write(">");
             String input = null;
             input = Console.ReadLine();
             return input;
@@ -47,9 +59,11 @@ namespace WinChatServer
 
         static void StartServer()
         {
-            server = new WCTcpServer(IPAddress.Parse("127.0.0.1"), 5005);
+            Console.Write(">Enter ip to listen on: ");
+            String ip = Console.ReadLine();
+            server = new WCTcpServer(IPAddress.Parse(ip), 5005);
             server.Start();
-            Console.WriteLine("Server started @ 127.0.0.1:5005");
+            Console.WriteLine(">Server started on " + ip + ":5005\n");
         }
 
         static void KillServer()
@@ -58,9 +72,39 @@ namespace WinChatServer
             {
                 if (server.Running)
                 {
-                    server.Stop("Server is shutting down.");
-                    Console.WriteLine("Server shutting down.");
+                    server.Stop("Console shutdown signal received.");
+                    Console.WriteLine(">Server shutting down.\n");
                 }
+                else
+                {
+                    Console.WriteLine(">Error: Server not started.\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine(">Error: Server not started.\n");
+            }
+        }
+
+        static void SendServerMessage()
+        {
+            if (server != null)
+            {
+                if (server.Running)
+                {
+                    Console.Write("\nMessage To Send> ");
+                    String input = Console.ReadLine();
+                    server.SendServerMessage(input);
+                    Console.WriteLine(">Sent.\n");
+                }
+                else
+                {
+                    Console.WriteLine(">Error: Server not started.\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine(">Error: Server not started.\n");
             }
         }
     }

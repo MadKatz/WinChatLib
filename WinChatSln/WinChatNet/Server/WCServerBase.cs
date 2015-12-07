@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinChatNet.Channels;
-using WinChatNet.Messages;
 using WinChatNet.NetworkAdapter;
 
 namespace WinChatNet.Server
@@ -24,6 +23,6 @@ namespace WinChatNet.Server
 
         public abstract void Stop(String shutDownMessage);
 
-        public abstract void SendMessage(IWCMessage message);
+        public abstract void SendServerMessage(String text);
     }
 }
